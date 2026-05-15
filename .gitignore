@@ -41,3 +41,50 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Created by https://www.toptal.com/developers/gitignore/api/angular
+# Edit at https://www.toptal.com/developers/gitignore?templates=angular
+
+### Angular ###
+## Angular ##
+# compiled output
+dist/
+tmp/
+app/**/*.js
+app/**/*.js.map
+
+# dependencies
+node_modules/
+bower_components/
+
+# IDEs and editors
+.idea/
+
+# misc
+.sass-cache/
+connect.lock/
+coverage/
+libpeerconnection.log/
+npm-debug.log
+testem.log
+typings/
+.angular/
+
+# e2e
+e2e/*.js
+e2e/*.map
+
+src/app/core/guards/AUTH_GUARD_AND_PROJECT_SETUP_COMPLETE_GUIDE.md
+
+src/app/core/interceptors/AUTH_INTERCEPTOR_DETAILED_EXPLANATION.md
+
+src/app/core/services/AUTH_SERVICE_DETAILED_EXPLANATION.md
+
+src/app/pages/login/login/LOGIN_COMPONENT_DETAILED_EXPLANATION.md
+
+src/app/pages/login/login/LOGIN_TEMPLATE_DETAILED_EXPLANATION.md
+# System Files
+.DS_Store/
+
+# End of https://www.toptal.com/developers/gitignore/api/angular
+
