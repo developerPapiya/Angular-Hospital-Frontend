@@ -1,31 +1,38 @@
-// export interface LoginRequest {
-//   email: string;
-//   password: string;
-// }
+/**
+ * Authentication-related interfaces.
+ * Covers login request/response and user profile data.
+ */
 
-// export interface User {
-//   _id: string;
-//   name: string;
-//   email: string;
-//   phone: string;
-//   role: 'admin' | 'staff' | 'nurse';
-//   status: 'active' | 'inactive';
-//   last_login: string;
-//   createdAt: string;
-//   updatedAt: string;
-// }
+/** Allowed user roles in the hospital system */
+export type UserRole   = 'admin' | 'staff' | 'nurse';
 
-// export interface LoginResponse {
-//   success: boolean;
-//   message: string;
-//   data: {
-//     token: string;
-//     user: User;
-//   };
-// }
+/** Account activation status */
+export type UserStatus = 'active' | 'inactive';
 
-// export interface AuthState {
-//   token: string | null;
-//   user: User | null;
-//   isAuthenticated: boolean;
-// }
+/**
+ * Full user profile as returned by GET /auth/me
+ * and embedded in the login response.
+ */
+export interface UserProfile {
+  _id:        string;
+  name:       string;
+  email:      string;
+  phone:      string;
+  role:       UserRole;
+  status:     UserStatus;
+  last_login: string;
+  createdAt:  string;
+  updatedAt:  string;
+}
+
+/** Payload for POST /auth/login */
+export interface LoginRequest {
+  email:    string;
+  password: string;
+}
+
+/** Data field returned from POST /auth/login on success */
+export interface LoginResponseData {
+  token: string;
+  user:  UserProfile;
+}
