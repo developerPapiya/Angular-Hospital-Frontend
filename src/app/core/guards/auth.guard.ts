@@ -1,63 +1,26 @@
-// import { Injectable } from '@angular/core';
-// import {
-//   CanActivate,
-//   CanActivateChild,
-//   Router,
-//   ActivatedRouteSnapshot,
-//   RouterStateSnapshot,
-//   UrlTree
-// } from '@angular/router';
-// import { Observable } from 'rxjs';
-// import { AuthService } from '../services/auth.service';
+import { CanActivateFn } from '@angular/router';
+import { inject }        from '@angular/core';
+import { Router }        from '@angular/router';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AuthGuard implements CanActivate, CanActivateChild {
-//   constructor(
-//     private authService: AuthService,
-//     private router: Router
-//   ) {}
+/**
+ * Route guard that protects authenticated routes.
+ * Checks for a JWT token in localStorage.
+ *
+ * - If token exists → allows navigation (returns true)
+ * - If no token → redirects to /login and blocks navigation (returns false)
+ *
+ * Note: inject() is permitted inside functional guards (CanActivateFn).
+ * This is the Angular 17+ standard for functional route guards.
+ */
+export const authGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  const token  = localStorage.getItem('token');
 
-//   canActivate(
-//     route: ActivatedRouteSnapshot,
-//     state: RouterStateSnapshot
-//   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-//     return this.checkAuth(state.url, route);
-//   }
+  if (token) {
+    return true;
+  }
 
-//   canActivateChild(
-//     route: ActivatedRouteSnapshot,
-//     state: RouterStateSnapshot
-//   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-//     return this.checkAuth(state.url, route);
-//   }
-
-//   private checkAuth(url: string, route: ActivatedRouteSnapshot): boolean | UrlTree {
-//     // Check if user is authenticated
-//     if (this.authService.isAuthenticated()) {
-//       // Check role-based access if required
-//       const requiredRole = route.data['role'];
-      
-//       if (requiredRole) {
-//         const userRole = this.authService.getUserRole();
-        
-//         // If user has required role, allow access
-//         if (userRole === requiredRole || requiredRole.includes(userRole)) {
-//           return true;
-//         }
-        
-//         // No permission
-//         this.router.navigate(['/unauthorized']);
-//         return false;
-//       }
-
-//       // No role requirement, allow access
-//       return true;
-//     }
-
-//     // Not authenticated, save URL and redirect to login
-//     this.router.navigate(['/login'], { queryParams: { returnUrl: url } });
-//     return false;
-//   }
-// }
+  // No token found — redirect to login page
+  router.navigate(['/login']);
+  return false;
+};

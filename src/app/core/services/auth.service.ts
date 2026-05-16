@@ -1,102 +1,129 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { BehaviorSubject, Observable, tap, map } from 'rxjs';
-// import { environment } from '../../environments/environment';
-// import { LoginRequest, LoginResponse, User, AuthState } from '../../interfaces/auth.interface';
+import { Injectable, signal }        from '@angular/core';
+import { HttpClient }                 from '@angular/common/http';
+import { Observable, tap }            from 'rxjs';
+import { Router }                     from '@angular/router';
+import { environment }                from '../../../environments/environment';
+import { ApiResponse }                from '../../interfaces/api.interface';
+import { LoginRequest,
+         LoginResponseData,
+         UserProfile }                from '../../interfaces/auth.interface';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AuthService {
-//   private apiUrl = `${environment.apiBaseUrl}/api/v1/auth`;
-  
-//   // BehaviorSubject stores current auth state
-//   private authState = new BehaviorSubject<AuthState>({
-//     token: this.getToken(),
-//     user: this.getUser(),
-//     isAuthenticated: !!this.getToken()
-//   });
+/**
+ * AuthService — handles all authentication-related API calls and state.
+ *
+ * Responsibilities:
+ * - Login (POST /auth/login) with JWT token storage
+ * - Logout (POST /auth/logout) with cleanup and redirect
+ * - Fetch current user profile (GET /auth/me)
+ * - Maintain a reactive `currentUser` signal for global access
+ * - Restore user session from localStorage on app boot
+ *
+ * Usage: Inject via constructor in components and other services.
+ */
+@Injectable({ providedIn: 'root' })
+export class AuthService {
 
-//   public auth$ = this.authState.asObservable();
+  /** Base API URL from environment configuration */
+  private api = environment.apiBaseUrl;
 
-//   constructor(private http: HttpClient) {}
+  /**
+   * Global signal — holds the currently logged-in user profile.
+   * Null when no user is authenticated.
+   * Components can read this reactively to update UI based on auth state.
+   */
+  currentUser = signal<UserProfile | null>(null);
 
-//   /**
-//    * Login Method
-//    * - Sends email & password to backend
-//    * - Stores token & user data on success
-//    * - Updates auth state
-//    */
-//   login(credentials: LoginRequest): Observable<LoginResponse> {
-//     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
-//       tap(response => {
-//         // Save token to localStorage
-//         localStorage.setItem('auth_token', response.data.token);
-//         // Save user data to localStorage
-//         localStorage.setItem('user_data', JSON.stringify(response.data.user));
-        
-//         // Update auth state
-//         this.authState.next({
-//           token: response.data.token,
-//           user: response.data.user,
-//           isAuthenticated: true
-//         });
-//       })
-//     );
-//   }
+  constructor(
+    private http:   HttpClient,
+    public  router: Router
+  ) {
+    // Restore user from localStorage on app boot
+    // This ensures the user session persists across page refreshes
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      try {
+        this.currentUser.set(JSON.parse(stored));
+      } catch {
+        // If stored data is corrupted, clean up
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
+    }
+  }
 
-//   /**
-//    * Logout Method
-//    * - Clears stored data
-//    * - Updates auth state
-//    */
-//   logout(): void {
-//     localStorage.removeItem('auth_token');
-//     localStorage.removeItem('user_data');
-    
-//     this.authState.next({
-//       token: null,
-//       user: null,
-//       isAuthenticated: false
-//     });
-//   }
+  /**
+   * Authenticate user with email and password.
+   * On success: stores JWT token and user profile in localStorage,
+   * updates the currentUser signal.
+   *
+   * @param payload - LoginRequest with email and password
+   * @returns Observable of the API response containing token and user data
+   */
+  login(payload: LoginRequest): Observable<ApiResponse<LoginResponseData>> {
+    return this.http.post<ApiResponse<LoginResponseData>>(
+      `${this.api}/auth/login`, payload
+    ).pipe(
+      tap(res => {
+        // Store token for auth interceptor
+        localStorage.setItem('token', res.data.token);
+        // Store user profile for session persistence
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+        // Update reactive signal so all subscribed components react
+        this.currentUser.set(res.data.user);
+      })
+    );
+  }
 
-//   /**
-//    * Get Token from localStorage
-//    */
-//   getToken(): string | null {
-//     return localStorage.getItem('auth_token');
-//   }
+  /**
+   * Logout the current user.
+   * Calls the backend logout endpoint, then clears all local auth data
+   * and redirects to the login page.
+   *
+   * @returns Observable of the API response
+   */
+  logout(): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>(
+      `${this.api}/auth/logout`, {}
+    ).pipe(
+      tap(() => {
+        // Clear all stored auth data
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Reset the current user signal
+        this.currentUser.set(null);
+        // Navigate to login page
+        this.router.navigate(['/login']);
+      })
+    );
+  }
 
-//   /**
-//    * Get User from localStorage
-//    */
-//   getUser(): User | null {
-//     const userData = localStorage.getItem('user_data');
-//     return userData ? JSON.parse(userData) : null;
-//   }
+  /**
+   * Fetch the authenticated user's profile from the server.
+   * Uses the Bearer token (injected by auth interceptor) for authentication.
+   *
+   * @returns Observable of the API response containing the user profile
+   */
+  getMe(): Observable<ApiResponse<UserProfile>> {
+    return this.http.get<ApiResponse<UserProfile>>(`${this.api}/auth/me`);
+  }
 
-//   /**
-//    * Check if user is authenticated
-//    */
-//   isAuthenticated(): boolean {
-//     return !!this.getToken();
-//   }
+  /**
+   * Check if a user is currently logged in.
+   * Based on the presence of a JWT token in localStorage.
+   *
+   * @returns true if a token exists in localStorage
+   */
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
 
-//   /**
-//    * Get Current User Observable
-//    */
-//   getCurrentUser(): Observable<User | null> {
-//     return this.auth$.pipe(
-//       map((state: AuthState) => state.user)
-//     );
-//   }
-
-//   /**
-//    * Get User Role
-//    */
-//   getUserRole(): string | null {
-//     const user = this.getUser();
-//     return user ? user.role : null;
-//   }
-// }
+  /**
+   * Get the current user's role.
+   * Returns empty string if no user is logged in.
+   *
+   * @returns The user's role ('admin', 'staff', 'nurse') or empty string
+   */
+  getRole(): string {
+    return this.currentUser()?.role ?? '';
+  }
+}

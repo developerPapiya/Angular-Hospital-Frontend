@@ -1,55 +1,22 @@
-// import { Injectable } from '@angular/core';
-// import {
-//   HttpRequest,
-//   HttpHandler,
-//   HttpEvent,
-//   HttpInterceptor,
-//   HttpErrorResponse
-// } from '@angular/common/http';
-// import { Observable, throwError } from 'rxjs';
-// import { catchError } from 'rxjs/operators';
-// import { AuthService } from '../services/auth.service';
-// import { Router } from '@angular/router';
+import { HttpInterceptorFn } from '@angular/common/http';
 
-// @Injectable()
-// export class AuthInterceptor implements HttpInterceptor {
-//   constructor(
-//     private authService: AuthService,
-//     private router: Router
-//   ) {}
+/**
+ * HTTP interceptor that automatically attaches the JWT Bearer token
+ * to every outgoing HTTP request. The token is read from localStorage.
+ *
+ * Registered in app.config.ts via provideHttpClient(withInterceptors([...])).
+ */
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('token');
 
-//   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    
-//     // Get token from AuthService
-//     const token = this.authService.getToken();
+  if (token) {
+    // Clone the request and set the Authorization header
+    const cloned = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+    return next(cloned);
+  }
 
-//     // Clone request and add Authorization header if token exists
-//     if (token) {
-//       request = request.clone({
-//         setHeaders: {
-//           Authorization: `Bearer ${token}`
-//         }
-//       });
-//     }
-
-//     // Send request and handle errors
-//     return next.handle(request).pipe(
-//       catchError((error: HttpErrorResponse) => {
-//         // If 401 (Unauthorized), token expired or invalid
-//         if (error.status === 401) {
-//           // Clear auth data
-//           this.authService.logout();
-//           // Redirect to login
-//           this.router.navigate(['/login']);
-//         }
-
-//         // If 403 (Forbidden), no permission
-//         if (error.status === 403) {
-//           this.router.navigate(['/unauthorized']);
-//         }
-
-//         return throwError(() => error);
-//       })
-//     );
-//   }
-// }
+  // No token found — pass request through without modification
+  return next(req);
+};
