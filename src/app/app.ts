@@ -14,7 +14,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent ],
+  imports: [RouterOutlet, NavbarComponent, ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -22,15 +22,37 @@ export class App {
   constructor(
     private authService: AuthService,
     private themeService: ThemeService // Injected to trigger initialization
-  ) {}
+  ) {
+    // Synchronously restore user session from localStorage
+    // This must happen immediately so route guards have access to currentUser
+    const token = localStorage.getItem('token')
 
-  ngOnInit(): void {
-  console.log('App component initialized');
+    if (token) {
+      // Session restored. Optionally refresh user profile from API in the background
+      this.authService.getMe().subscribe({
+        next: (res) => {
+          // Update with fresh data from server
+          this.authService.currentUser.set(res.data);
+        },
+        error: (err) => {
+          // If token is invalid or expired, clear stored data
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          this.authService.currentUser.set(null);
+        }
+      });
+    }
   }
 
-  /**
+    /**
    * Computed signal derived from AuthService.currentUser.
    * Returns true when a user is logged in (currentUser is not null).
    */
   isLoggedIn = computed(() => !!this.authService.currentUser());
+
+  ngOnInit(): void {
+     console.log('App Component initialized')
+  }
+
+
 }

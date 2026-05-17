@@ -22,7 +22,7 @@ import { ProfileDropdownComponent } from '../profile-dropdown/profile-dropdown.c
 export class NavbarComponent {
 
     ngOnInit(): void {
-  console.log('App component initialized');
+  console.log('Navbar component initialized');
   }
 
 
@@ -31,7 +31,11 @@ export class NavbarComponent {
 
   /** Computed signal for role-based navigation visibility */
   canRegisterOrBook = computed(() => 
-    ['admin', 'staff'].includes(this.authService.getRole())
+    ['admin', 'staff', 'nurse'].includes(this.authService.getRole())
+  );
+
+  canSeeDashboard = computed(() =>
+    this.authService.getRole() === 'admin'
   );
 
   /** Expose theme state to template */

@@ -19,6 +19,16 @@
         <!-- Desktop Navigation -->
         <div class="hidden md:ml-8 md:flex md:space-x-4">
           @if (canRegisterOrBook()) {
+            @if(canSeeDashboard()) {
+              <a 
+                routerLink="/dashboard" 
+                routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
+                class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border-b-2 border-transparent"
+                id="nav-dashboard"
+              >
+                Dashboard
+              </a>
+            }
             <a 
               routerLink="/register-patient" 
               routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"

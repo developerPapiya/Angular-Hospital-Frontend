@@ -37,19 +37,9 @@ export class AuthService {
     private http:   HttpClient,
     public  router: Router
   ) {
-    // Restore user from localStorage on app boot
-    // This ensures the user session persists across page refreshes
-    const stored = localStorage.getItem('user');
-    if (stored) {
-      try {
-        this.currentUser.set(JSON.parse(stored));
-      } catch {
-        // If stored data is corrupted, clean up
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-      }
-    }
+
   }
+
 
   /**
    * Authenticate user with email and password.
