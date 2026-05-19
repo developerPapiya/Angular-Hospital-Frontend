@@ -8,6 +8,7 @@ import { AppointmentService } from '../../core/services/appointment.service';
 import { Patient } from '../../interfaces/patient.interface';
 import { Doctor } from '../../interfaces/doctor.interface';
 import { BookAppointmentRequest } from '../../interfaces/appointment.interface';
+import { ToastService } from '../../core/services/toast.service';
 
 /**
  * Book Appointment Page Component
@@ -58,7 +59,8 @@ export class BookAppointmentComponent implements OnInit {
     private router: Router,
     private patientService: PatientService,
     private doctorService: DoctorService,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private toastService: ToastService
   ) {
     // Setup debounced search effect
     this.searchSubject.pipe(
@@ -87,7 +89,7 @@ export class BookAppointmentComponent implements OnInit {
     if (pId) {
       this.patientService.getPatientById(pId).subscribe({
         next: (res) => this.selectPatient(res.data),
-        error: () => this.errorMsg.set('Failed to load pre-filled patient.')
+        error: () => this.toastService.error('Failed to load pre-filled patient.', 'Failed to load patient details.')
       });
     }
   }
@@ -98,7 +100,7 @@ export class BookAppointmentComponent implements OnInit {
   private loadDoctors(): void {
     this.doctorService.getAvailableDoctors().subscribe({
       next: (res) => this.availableDoctors.set(res.data),
-      error: () => this.errorMsg.set('Failed to load doctors.')
+      error: () => this.toastService.error('Failed to load doctors.', 'Failed to load available doctors.')
     });
   }
 
@@ -131,7 +133,7 @@ export class BookAppointmentComponent implements OnInit {
       },
       error: () => {
         this.isSearching.set(false);
-        this.errorMsg.set('Patient search failed.');
+        this.toastService.error('Patient search failed.', 'Failed to search for patients.');
       }
     });
   }
@@ -177,8 +179,8 @@ export class BookAppointmentComponent implements OnInit {
 
     this.appointmentService.bookAppointment(payload).subscribe({
       next: (res) => {
+        this.toastService.success('Appointment Booked', 'Appointment booked successfully.');
         this.isSubmitting.set(false);
-        this.successMsg.set('Appointment booked! Slip opened in new tab.');
         
         // Open PDF slip
         this.appointmentService.openSlipInNewTab(res.data._id);
@@ -190,6 +192,7 @@ export class BookAppointmentComponent implements OnInit {
       error: (err) => {
         this.isSubmitting.set(false);
         this.errorMsg.set(err.error?.message ?? 'Failed to book appointment.');
+        this.toastService.error('Booking Failed', this.errorMsg());
       }
     });
   }

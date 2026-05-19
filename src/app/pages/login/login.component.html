@@ -37,14 +37,6 @@
         <p class="text-slate-500 dark:text-orange-100 mt-2 text-sm sm:text-base font-medium">Sign in to your account</p>
       </div>
 
-      <!-- Error Message Alert -->
-      @if (errorMsg()) {
-        <div id="login-error-alert" class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-300 text-sm animate-in bounce-in">
-
-          <span>{{ errorMsg() }}</span>
-        </div>
-      }
-
       <!-- Login Form -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
 

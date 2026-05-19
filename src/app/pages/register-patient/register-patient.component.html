@@ -102,7 +102,7 @@
               type="text"
               formControlName="name"
               placeholder="Enter patient name"
-              class="w-full px-4 py-3  bg-slate-50 dark:bg-[#101010] border-black/30 dark:border-white/20 border rounded-xl text-slate-900 dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 transition-all"
+              class="w-full px-4 py-3  bg-slate-50 dark:bg-[#101010] border-black/30 dark:border-white/10 border rounded-xl text-slate-900 dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 transition-all"
               [class]="
                 name.invalid && name.touched
                   ? 'border-red-400 dark:border-red-800'
@@ -139,7 +139,7 @@
                 formControlName="phone"
                 placeholder="0000000000"
                 maxlength="10"
-                class="w-full pl-16 pr-4 py-3 bg-slate-50 dark:bg-[#101010] border-black/30 dark:border-white/20 border rounded-xl text-slate-900 dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 transition-all"
+                class="w-full pl-16 pr-4 py-3 bg-slate-50 dark:bg-[#101010] border-black/30 dark:border-white/10 border rounded-xl text-slate-900 dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 transition-all"
                 [class]="
                   phone.invalid && phone.touched
                     ? 'border-red-400 dark:border-red-800'
@@ -169,7 +169,7 @@
             <select
               id="gender"
               formControlName="gender"
-              class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border border-black/30 dark:border-white/20 rounded-xl  text-slate-900  dark:text-white dark:placeholder-white/30  placeholder-black/40 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 appearance-none transition-all cursor-pointer"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border border-black/30 dark:border-white/10 rounded-xl  text-slate-900  dark:text-white dark:placeholder-white/30  placeholder-black/40 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 appearance-none transition-all cursor-pointer"
               [class]="
                 gender.invalid && gender.touched
                   ? 'border-red-400 dark:border-red-800'
@@ -196,7 +196,7 @@
               type="number"
               formControlName="age"
               placeholder="Enter patient age"
-              class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border border-black/20 dark:border-white/20 rounded-xl text-slate-900  dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-300 transition-all"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border border-black/20 dark:border-white/10 rounded-xl text-slate-900  dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-300 transition-all"
               [class]="age.invalid && age.touched
                   ? 'border-red-400 dark:border-red-800'
                   : 'border-slate-200 dark:border-slate-700'
@@ -224,7 +224,7 @@
             formControlName="address"
             rows="3"
             placeholder="Enter patient's full address..."
-            class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border  border-black/20 dark:border-white/20 rounded-xl text-slate-900 dark:text-white placeholder-white/40 dark:placeholder:white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-300 transition-all resize-none"
+            class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border  border-black/20 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-white/40 dark:placeholder:white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-300 transition-all resize-none"
           ></textarea>
           @if (address.errors?.['maxlength']) {
             <p class="text-xs text-red-500 font-medium">Address is too long (max 255 chars)</p>

@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PatientService } from '../../core/services/patient.service';
 import { Router, RouterLink } from '@angular/router';
 import { RegisterPatientRequest } from '../../interfaces/patient.interface';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-register-patient',
@@ -42,7 +43,8 @@ isSuccess = signal<string>('');
 
    constructor(
     private patientService: PatientService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   get name()    { return this.patientForm.get('name')!; }
@@ -69,6 +71,7 @@ isSuccess = signal<string>('');
     };
         this.patientService.registerPatient(payload).subscribe({
       next: (res) => {
+        this.toastService.success('Patient Registered', 'Patient registered successfully.');
         this.isSubmitting.set(false);
          this.router.navigate(['/book-appointment'], {
           queryParams: {
@@ -92,6 +95,7 @@ isSuccess = signal<string>('');
         } else {
           this.errorMsg.set(err.error?.message ?? 'Failed to register patient. Please try again.');
         }
+        this.toastService.error('Registration Failed', this.errorMsg());
       }
     });
   }
