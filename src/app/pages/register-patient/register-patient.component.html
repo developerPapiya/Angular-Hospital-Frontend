@@ -1,0 +1,275 @@
+<div
+  class="max-w-4xl mx-auto px-4 py-8 sm:py-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
+>
+  <!-- Header Section -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      Register New Patient
+    </h1>
+    <p class="text-slate-500 dark:text-white/80 mt-2">
+      Enter patient details to create a new medical record.
+    </p>
+  </div>
+
+  <!-- Main Form Card -->
+  <div
+    class="bg-white dark:bg-[#101010]  border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden transition-colors duration-300"
+  >
+    <div class="p-6 sm:p-10">
+      <!-- Error Message Area -->
+      @if (errorMsg()) {
+        <div
+          class="mb-8 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm flex gap-3 items-start animate-in bounce-in"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 shrink-0"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <div>
+            <p class="font-semibold">{{ errorMsg() }}</p>
+            @if (isDuplicatePhone()) {
+              <div class="mt-3">
+                <a
+                  routerLink="/book-appointment"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors"
+                >
+                  Book Appointment for this Patient
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-3 h-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      <!-- success Message Area -->
+     <!-- @if (isSuccess()) {
+        <div
+          class="mb-8 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm flex gap-3 items-start animate-in bounce-in"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 shrink-0"
+            width="200"
+            height="200"
+            viewBox="0 0 20 20"
+            
+          >
+            <path
+              fill="currentColor"
+              d="M10 20a10 10 0 0 1 0-20a10 10 0 1 1 0 20Zm-2-5l9-8.5L15.5 5L8 12L4.5 8.5L3 10l5 5Z"
+            />
+          </svg>
+          <div>
+            <p class="font-semibold">{{ isSuccess() }}</p>
+          </div>
+        </div>
+      }-->
+
+      <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Two-column grid for Name & Phone -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Full Name -->
+          <div class="space-y-2">
+            <label
+              for="name"
+              class="text-sm font-semibold text-black/80 dark:text-white/80 flex items-center gap-2"
+            >
+              Full Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              placeholder="Enter patient name"
+              class="w-full px-4 py-3  bg-slate-50 dark:bg-[#101010] border-black/30 dark:border-white/20 border rounded-xl text-slate-900 dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 transition-all"
+              [class]="
+                name.invalid && name.touched
+                  ? 'border-red-400 dark:border-red-800'
+                  : 'border-slate-200 dark:border-slate-700'
+              "
+            />
+            @if (name.invalid && name.touched) {
+              <p class="text-xs text-red-500 font-medium">
+                @if (name.errors?.['required']) {
+                  Name is required
+                } @else if (name.errors?.['minlength']) {
+                  Name must be at least 2 characters
+                }
+              </p>
+            }
+          </div>
+
+          <!-- Phone Number -->
+          <div class="space-y-2">
+            <label
+              for="phone"
+              class="text-sm font-semibold text-black/80 dark:text-white/80 flex items-center gap-2"
+            >
+              Phone Number <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <span
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/30 text-sm font-medium border-r border-slate-200 dark:border-slate-700 pr-2"
+                >+91</span
+              >
+              <input
+                id="phone"
+                type="tel"
+                formControlName="phone"
+                placeholder="0000000000"
+                maxlength="10"
+                class="w-full pl-16 pr-4 py-3 bg-slate-50 dark:bg-[#101010] border-black/30 dark:border-white/20 border rounded-xl text-slate-900 dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 transition-all"
+                [class]="
+                  phone.invalid && phone.touched
+                    ? 'border-red-400 dark:border-red-800'
+                    : 'border-slate-200 dark:border-slate-700'
+                "
+              />
+            </div>
+            @if (phone.invalid && phone.touched) {
+              <p class="text-xs text-red-500 font-medium">
+                @if (phone.errors?.['required']) {
+                  Phone is required
+                } @else if (phone.errors?.['pattern']) {
+                  Enter a valid 10-digit Indian mobile number
+                }
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Two-column grid for Gender & Age -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Gender Selection -->
+          <div class="space-y-2">
+            <label for="gender" class="text-sm font-semibold text-black/80 dark:text-white/80">
+              Gender <span class="text-red-500">*</span>
+            </label>
+            <select
+              id="gender"
+              formControlName="gender"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border border-black/30 dark:border-white/20 rounded-xl  text-slate-900  dark:text-white dark:placeholder-white/30  placeholder-black/40 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-400 appearance-none transition-all cursor-pointer"
+              [class]="
+                gender.invalid && gender.touched
+                  ? 'border-red-400 dark:border-red-800'
+                  : 'border-slate-200 dark:border-slate-700'
+              "
+            >
+              <option value="" disabled selected>Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            @if (gender.invalid && gender.touched) {
+              <p class="text-xs text-red-500 font-medium">Gender selection is required</p>
+            }
+          </div>
+
+          <!-- Age Input -->
+          <div class="space-y-2">
+            <label for="age" class="text-sm font-semibold text-black/80 dark:text-white/80">
+              Age (Years) <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="age"
+              type="number"
+              formControlName="age"
+              placeholder="Enter patient age"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border border-black/20 dark:border-white/20 rounded-xl text-slate-900  dark:text-white placeholder-black/40 dark:placeholder-white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-300 transition-all"
+              [class]="age.invalid && age.touched
+                  ? 'border-red-400 dark:border-red-800'
+                  : 'border-slate-200 dark:border-slate-700'
+              "
+            />
+            @if (age.invalid && age.touched) {
+              <p class="text-xs text-red-500 font-medium">
+                @if (age.errors?.['required']) {
+                  Age is required
+                } @else {
+                  Age must be between 0 and 120
+                }
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Full-width Address -->
+        <div class="space-y-2">
+          <label for="address" class="text-sm font-semibold text-black/80 dark:text-white/80">
+            Address (Optional)
+          </label>
+          <textarea
+            id="address"
+            formControlName="address"
+            rows="3"
+            placeholder="Enter patient's full address..."
+            class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101010] border  border-black/20 dark:border-white/20 rounded-xl text-slate-900 dark:text-white placeholder-white/40 dark:placeholder:white/30 focus:outline-none focus:ring-1 dark:focus:ring-orange-200 focus:ring-orange-300 transition-all resize-none"
+          ></textarea>
+          @if (address.errors?.['maxlength']) {
+            <p class="text-xs text-red-500 font-medium">Address is too long (max 255 chars)</p>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button
+            type="submit"
+            [disabled]="isSubmitting()"
+            class="w-full md:w-auto px-8 py-4 bg-orange-300 dark:bg-[#edc99e] disabled:from-orange-100 disabled:to-orange-100 text-black shadow-lg font-bold rounded-xl  transition-all flex items-center justify-center gap-3 cursor-pointer"
+          >
+            @if (isSubmitting()) {
+              <svg
+                class="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Registering...
+            } @else {
+              Register Patient
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Security Footer -->
+  <p class="mt-6 text-center text-xs text-slate-700 dark:text-orange-200 flex items-center justify-center gap-1">
+    Secure medical record creation
+  </p>
+</div>

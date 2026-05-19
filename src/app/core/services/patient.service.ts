@@ -26,6 +26,11 @@ export class PatientService {
 
   constructor(private http: HttpClient) {}
 
+  registerPatient(payload:RegisterPatientRequest):Observable<ApiResponse<Patient>>{
+  return this.http.post<ApiResponse<Patient>>(
+    `${this.api}/patients`, payload
+  );
+}
 
   /**
    * Search for patients with optional filters
