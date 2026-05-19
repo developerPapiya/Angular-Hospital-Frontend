@@ -1,4 +1,4 @@
-<nav class="bg-white/80 dark:bg-[#101010] backdrop-blur-md border-b border-slate-200 dark:border-slate-600 sticky top-0 z-40 transition-colors duration-300">
+<nav class="bg-white/80 dark:bg-[#101010] backdrop-blur-md border-b border-slate-200 dark:border-white/20 sticky top-0 z-40 transition-colors duration-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       
@@ -6,13 +6,9 @@
       <div class="flex items-center">
         <!-- Logo -->
         <a routerLink="/" class="flex items-center gap-2 group">
-          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7 2a2 2 0 00-2 2v1H3a1 1 0 000 2h2v2H3a1 1 0 000 2h2v2H3a1 1 0 000 2h2v1a2 2 0 002 2h6a2 2 0 002-2v-1h2a1 1 0 000-2h-2v-2h2a1 1 0 000-2h-2V7h2a1 1 0 000-2h-2V4a2 2 0 00-2-2H7zm3 8a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <span class="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
-            Hospital<span class="font-normal text-blue-600">App</span>
+         
+          <span class="text-xl font-bold text-slate-900 dark:text-white/95 bg-clip-text ">
+            Hospital<span class="font-normal text-orange-400">App</span>
           </span>
         </a>
 
@@ -23,7 +19,7 @@
               <a 
                 routerLink="/dashboard" 
                 routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-                class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border-b-2 border-transparent"
+                class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-white/80 hover:text-slate-900 dark:hover:text-orange-100 transition-all border-b-2 border-transparent"
                 id="nav-dashboard"
               >
                 Dashboard
@@ -32,7 +28,7 @@
             <a 
               routerLink="/register-patient" 
               routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border-b-2 border-transparent"
+              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-white/80 hover:text-slate-900 dark:hover:text-orange-100 transition-all border-b-2 border-transparent"
               id="nav-register-patient"
             >
               Register Patient
@@ -40,7 +36,7 @@
             <a 
               routerLink="/book-appointment" 
               routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border-b-2 border-transparent"
+              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-white/80 hover:text-slate-900 dark:hover:text-orange-100 transition-all border-b-2 border-transparent"
               id="nav-book-appointment"
             >
               Book Appointment
@@ -55,7 +51,7 @@
         <!-- Theme Toggle Button -->
         <button 
           (click)="toggleTheme()"
-          class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          class="p-2 rounded-lg text-slate-500 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
           [title]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
         >
           @if (isDarkMode()) {

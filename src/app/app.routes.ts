@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { RegisterPatientComponent } from './pages/register-patient/register-patient.component';
 
 /**
  * Application route definitions.
@@ -25,5 +26,12 @@ export const routes: Routes = [
       import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
     canActivate: [authGuard],
     title: 'Dashboard — Hospital',
+  },
+  {
+    path: 'register-patient',
+    loadComponent: ()=>import('./pages/register-patient/register-patient.component')
+    .then(m => m.RegisterPatientComponent),
+    canActivate: [authGuard],
+    title: 'Book Appointment'
   },
 ];
