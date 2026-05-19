@@ -10,7 +10,7 @@ import { AppointmentListResponse } from '../../interfaces/appointment.interface'
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  allDoctors = signal<Doctor[] >([]);
+  allDoctors = signal<Doctor[] | null>(null);
   allPatients = signal<PatientListResponse | null>(null);
   allAppointments = signal<AppointmentListResponse | null>(null);
   errorMsg = signal<string>('');

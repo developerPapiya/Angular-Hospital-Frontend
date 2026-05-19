@@ -28,6 +28,13 @@ export const routes: Routes = [
     title: 'Dashboard — Hospital',
   },
   {
+    path: 'book-appointment',
+    loadComponent: () =>
+      import('./pages/book-appointment/book-appointment.component').then( (m) => m.BookAppointmentComponent),
+    canActivate: [authGuard],
+    title: 'Book Appointment — Hospital',
+  },
+   {
     path: 'register-patient',
     loadComponent: ()=>import('./pages/register-patient/register-patient.component')
     .then(m => m.RegisterPatientComponent),

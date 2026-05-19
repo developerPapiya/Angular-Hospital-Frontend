@@ -8,3 +8,15 @@
 
 /* Enable dark mode class-based toggling */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Date picker styling for dark mode */
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Makes calendar icon white in dark mode */
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
