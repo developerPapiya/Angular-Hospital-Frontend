@@ -1,5 +1,6 @@
 /* Global styles — Hospital Management System */
 @import "tailwindcss";
+@layer theme, base, primeng, components, utilities;
 
 /* Configure Inter as the default sans-serif font via Tailwind v4 theme */
 @theme {
@@ -20,3 +21,12 @@
     opacity: 1;
 }
 
+
+/* Sirf error severity ke liye */
+.p-toast-message-error .p-toast-detail {
+  color: rgb(220 38 38) !important; /* red-600 light mode */
+}
+
+.dark .p-toast-message-error .p-toast-detail {
+  color: rgb(255, 255, 255) !important; /* red-300 dark mode */
+}

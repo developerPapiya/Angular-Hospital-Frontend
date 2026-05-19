@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { LoginRequest } from '../../interfaces/auth.interface';
+import { ToastService } from '../../core/services/toast.service';
 
 /**
  * Login page component.
@@ -46,6 +47,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private themeService: ThemeService,
     private router: Router,
+    private toastService: ToastService,
   ) {
       // Watch for currentUser changes
     effect(() => {
@@ -129,6 +131,7 @@ export class LoginComponent implements OnInit {
     // Call AuthService.login() — follows the doc's API error handling pattern
     this.authService.login(payload).subscribe({
       next: () => {
+        this.toastService.success('Login Successful', 'Welcome back!');
         // Success — redirect to dashboard
         this.isSubmitting.set(false);
         if (this.authService.getRole() === 'admin') {
@@ -152,6 +155,8 @@ export class LoginComponent implements OnInit {
           // Use server message if available, otherwise generic message
           this.errorMsg.set(err.error?.message ?? 'Something went wrong. Please try again.');
         }
+
+        this.toastService.error('Login Failed', this.errorMsg());
       },
     });
   }

@@ -3,6 +3,7 @@ import { RouterOutlet }       from '@angular/router';
 import { AuthService }        from './core/services/auth.service';
 import { ThemeService }       from './core/services/theme.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 /**
  * Root application component.
@@ -14,7 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, ],
+  imports: [RouterOutlet, NavbarComponent, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

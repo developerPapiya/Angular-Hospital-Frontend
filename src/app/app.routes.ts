@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { RegisterPatientComponent } from './pages/register-patient/register-patient.component';
 
 /**
  * Application route definitions.
