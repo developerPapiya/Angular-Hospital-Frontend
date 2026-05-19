@@ -1,0 +1,179 @@
+<div class="max-w-5xl mx-auto px-4 py-8 sm:py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+  
+  <!-- Page Header -->
+  <div class="mb-10">
+    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Book Appointment</h1>
+    <p class="text-slate-500 dark:text-slate-400 mt-2">Schedule a consultation and generate an OPD slip.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Patient Selection/Card -->
+    <div class="lg:col-span-1 space-y-6">
+      
+      <!-- Patient Search (Visible only if no patient selected) -->
+      @if (!selectedPatient()) {
+        <div class="bg-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl  p-6">
+          <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Find Patient</label>
+          <div class="relative">
+            <input 
+              type="text" 
+              placeholder="Search by name or phone..." 
+              (input)="onSearchInput($event)"
+              class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:text-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-orange-300 transition-all"
+            >
+            <div class="absolute left-3 top-3 text-slate-400">
+              @if (isSearching()) {
+                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              }
+            </div>
+          </div>
+
+          <!-- Search Results Dropdown -->
+          @if (searchResults()?.length ?? 0 > 0) {
+            <div class="mt-2 max-h-60 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-xl z-20">
+              @for (p of searchResults(); track p._id) {
+                <button 
+                  (click)="selectPatient(p)"
+                  class="w-full text-left px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 border-b last:border-0 border-slate-100 dark:border-slate-700 transition-colors"
+                >
+                  <p class="text-sm font-bold text-slate-900 dark:text-white">{{ p.name }}</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ p.patient_id }} • {{ p.phone }}</p>
+                </button>
+              }
+            </div>
+          } @else if (isSearching() === false && searchResults()?.length === 0 && patientId.touched && !patientId.value) {
+             <p class="mt-3 text-xs text-slate-500">No patients found. Try a different search term or register them first.</p>
+          }
+        </div>
+      }
+
+      <!-- Selected Patient Info Card -->
+      @if (selectedPatient(); as p) {
+        <div class="bg-orange-300 rounded-2xl shadow-lg p-6 text-slate-900 animate-in zoom-in-95 duration-300">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <p class="text-slate-900 text-xs font-bold uppercase tracking-wider mb-1">Selected Patient</p>
+              <h2 class="text-xl text-slate-900 font-bold">{{ p.name }}</h2>
+              <p class="text-slate-900 text-sm">{{ p.patient_id }}</p>
+            </div>
+            <button (click)="clearSelection()" class="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Change Patient">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+          </div>
+          <div class="space-y-2 border-t text-slate-900 pt-4 text-sm">
+            <div class="flex justify-between"><span class="text-slate-900">Phone</span><span>{{ p.phone }}</span></div>
+            <div class="flex justify-between"><span class="text-slate-900">Age / Gender</span><span>{{ p.age }}Y / {{ p.gender }}</span></div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Right Column: Booking Form -->
+    <div class="lg:col-span-2">
+      <div class="bg-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl  p-6 sm:p-10 transition-colors duration-300">
+        
+        <!-- Alerts -->
+        @if (errorMsg()) {
+          <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl text-sm flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+            {{ errorMsg() }}
+          </div>
+        }
+        @if (successMsg()) {
+          <div class="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 rounded-xl text-sm flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            {{ successMsg() }}
+          </div>
+        }
+
+        <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          
+          <!-- Disease & Symptoms -->
+          <div class="space-y-6">
+            <div class="space-y-2">
+              <label for="disease" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Primary Complaint / Disease <span class="text-red-500">*</span></label>
+              <input id="disease" type="text" formControlName="disease" placeholder="e.g. Chronic Migraine" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:text-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-orange-300 transition-all" [class]="disease.invalid && disease.touched ? 'border-red-400' : 'border-slate-200 dark:border-slate-700'">
+                @if (disease.invalid && disease.touched) {
+              <p class="text-xs text-red-500 font-medium">
+                @if (disease.errors?.['required']) { Disease is required }
+                @else if (disease.errors?.['minlength']) { Disease must be at least 2 characters }
+              </p>
+            }
+            </div>
+
+            <div class="space-y-2">
+              <label for="symptoms" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Symptoms Detail <span class="text-red-500">*</span></label>
+              <input id="symptoms" formControlName="symptoms" rows="3" placeholder="Describe symptoms in detail..." class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:text-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-orange-300 transition-all" [class]="symptoms.invalid && symptoms.touched ? 'border-red-400' : 'border-slate-200 dark:border-slate-700'">
+                @if (symptoms.invalid && symptoms.touched) {
+              <p class="text-xs text-red-500 font-medium">
+                @if (symptoms.errors?.['required']) { Symptoms are required }
+                @else if (symptoms.errors?.['minlength']) { Symptoms must be at least 10 characters }
+              </p>
+            }
+            </div>
+          </div>
+
+          <!-- Doctor & Date -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label for="doctor" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Consulting Doctor <span class="text-red-500">*</span></label>
+              <select id="doctor" formControlName="doctor_id" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:text-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-orange-300 transition-all appearance-none cursor-pointer" [class]="doctorId.invalid && doctorId.touched ? 'border-red-400' : 'border-slate-200 dark:border-slate-700'">
+                <option value="" disabled>Select Doctor</option>
+                @for (d of availableDoctors(); track d._id) {
+                  <option [value]="d._id">Dr. {{ d.name }} — {{ d.specialization }} ({{ d.department }})</option>
+                } @empty {
+                  <option disabled>No available doctors found</option>
+                }
+              </select>
+              @if (doctorId.invalid && doctorId.touched) {
+                <p class="text-xs text-red-500 font-medium">
+                  @if (doctorId.errors?.['required']) { Doctor selection is required }
+                </p>
+              }
+            </div>
+
+            <div class="space-y-2">
+              <label for="date" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Appointment Date <span class="text-red-500">*</span></label>
+              <input id="date" type="date" formControlName="scheduled_at" [min]="minDate" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:text-white dark:bg-[#101010] border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-orange-300 transition-all" [class]="scheduledAt.invalid && scheduledAt.touched ? 'border-red-400' : 'border-slate-200 dark:border-slate-700'">
+              @if (scheduledAt.invalid && scheduledAt.touched) {
+                <p class="text-xs text-red-500 font-medium">
+                  @if (scheduledAt.errors?.['required']) { Appointment date is required }
+                </p>
+              }
+            </div>
+          </div>
+
+          <!-- Submit Action -->
+          <div class="pt-4">
+            <button 
+              type="submit" 
+              [disabled]="isSubmitting() || !selectedPatient()"
+              class="w-full px-8 py-4 bg-orange-300 disabled:bg-orange-200 text-slate-900 font-bold rounded-xl shadow-lg  transition-all flex items-center justify-center gap-3 cursor-pointer group"
+            >
+              @if (isSubmitting()) {
+                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                Processing...
+              } @else {
+                Book & Generate Slip
+              }
+            </button>
+            @if (!selectedPatient()) {
+              <p class="mt-3 text-center text-xs text-red-500 font-medium">Please select a patient before booking.</p>
+            }
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

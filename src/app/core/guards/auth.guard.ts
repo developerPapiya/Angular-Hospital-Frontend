@@ -16,7 +16,7 @@ import { AuthService } from '../services/auth.service';
 export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const token  = localStorage.getItem('token');
+  const token  = authService.isLoggedIn();
 
   
   if (token) {
