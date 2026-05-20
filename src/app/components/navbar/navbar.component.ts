@@ -14,7 +14,7 @@ import { ProfileDropdownComponent } from '../profile-dropdown/profile-dropdown.c
 export class NavbarComponent {
 
     ngOnInit(): void {
-  console.log('Navbar component initialized');
+  // console.log('Navbar component initialized');
   }
 
 

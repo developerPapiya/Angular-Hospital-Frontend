@@ -160,7 +160,7 @@ export class BookAppointmentComponent implements OnInit {
 
     this.appointmentService.bookAppointment(payload).subscribe({
       next: (res) => {
-        console.log(res);
+        // console.log(res);
         this.toastService.success('Appointment Booked', 'Appointment booked successfully.');
         this.isSubmitting.set(false);
         

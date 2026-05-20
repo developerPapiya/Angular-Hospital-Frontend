@@ -19,14 +19,14 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadDashboardData();
-    console.log('DashboardComponent initialized');
+    // console.log('DashboardComponent initialized');
   }
 
   private loadDashboardData(): void {
     this.dashboardService.getAllPatients().subscribe({
       next: (response) => {
-        console.log('Patients res:', response);
-        console.log('Patients res.data:', response.data);
+        // console.log('Patients res:', response);
+        // console.log('Patients res.data:', response.data);
         this.allPatients.set(response.data);
       },
       error: () => {
@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
     });
     this.dashboardService.getAllDoctors().subscribe({
       next: (response) => {
-        console.log('Fetched doctors:', response.data);
+        // console.log('Fetched doctors:', response.data);
         this.allDoctors.set(response.data);
       },
       error: () => {
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
     });
     this.dashboardService.getAllAppointments().subscribe({
       next: (response) => {
-        console.log('Fetched appointments:', response.data);
+        // console.log('Fetched appointments:', response.data);
         this.allAppointments.set(response.data);
       },
       error: () => {

@@ -41,7 +41,7 @@ export class App {
   isLoggedIn = computed(() => !!this.authService.currentUser());
 
   ngOnInit(): void {
-     console.log('App Component initialized')
+    //  console.log('App Component initialized');
   }
 
 
