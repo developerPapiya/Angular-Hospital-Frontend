@@ -23,8 +23,8 @@ export class RegisterPatientComponent {
     gender: new FormControl('',[Validators.required]),
     age: new FormControl<null | number>(null,[
       Validators.required,
-    Validators.minLength(0),
-  Validators.maxLength(120)]),
+    Validators.min(0),
+  Validators.max(120)]),
 
   address: new FormControl('',[
     Validators.required,
