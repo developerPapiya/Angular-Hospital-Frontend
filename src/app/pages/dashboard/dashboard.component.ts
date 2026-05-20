@@ -3,6 +3,7 @@ import { DashboardService } from '../../core/services/dashboard.service';
 import { Doctor } from '../../interfaces/doctor.interface';
 import { PatientListResponse } from '../../interfaces/patient.interface';
 import { AppointmentListResponse } from '../../interfaces/appointment.interface';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,9 +14,8 @@ export class DashboardComponent implements OnInit {
   allDoctors = signal<Doctor[] | null>(null);
   allPatients = signal<PatientListResponse | null>(null);
   allAppointments = signal<AppointmentListResponse | null>(null);
-  errorMsg = signal<string>('');
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService, private toastService: ToastService) {}
 
   ngOnInit() {
     this.loadDashboardData();
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
         this.allPatients.set(response.data);
       },
       error: () => {
-        this.errorMsg.set('Failed to load data.');
+        this.toastService.error('Failed to load patient data.', 'error');
       },
     });
     this.dashboardService.getAllDoctors().subscribe({
@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
         this.allDoctors.set(response.data);
       },
       error: () => {
-        this.errorMsg.set('Failed to load data.');
+        this.toastService.error('Failed to load doctor data.', 'error');
       },
     });
     this.dashboardService.getAllAppointments().subscribe({
@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
         this.allAppointments.set(response.data);
       },
       error: () => {
-        this.errorMsg.set('Failed to load data.');
+        this.toastService.error('Failed to load appointment data.', 'error');
       },
     });
   }
