@@ -36,7 +36,8 @@ export class BookAppointmentComponent implements OnInit {
     doctor_id:    new FormControl('', [Validators.required]),
     disease:      new FormControl('', [Validators.required, Validators.maxLength(200)]),
     symptoms:     new FormControl('', [Validators.required, Validators.maxLength(500)]),
-    scheduled_at: new FormControl('', [Validators.required])
+    scheduled_at: new FormControl('', [Validators.required]),
+    scheduled_time: new FormControl('', [Validators.required])
   });
 
   // ── Signals for state management ──
@@ -80,6 +81,7 @@ export class BookAppointmentComponent implements OnInit {
   get disease()     { return this.bookingForm.get('disease')!; }
   get symptoms()    { return this.bookingForm.get('symptoms')!; }
   get scheduledAt() { return this.bookingForm.get('scheduled_at')!; }
+  get scheduledTime() { return this.bookingForm.get('scheduled_time')!; }
 
   /**
    * Check for patient details in query parameters (from Register page redirect)
@@ -169,16 +171,21 @@ export class BookAppointmentComponent implements OnInit {
 
     this.isSubmitting.set(true);
 
+    // Combine date and time into ISO format
+    const dateTimeString = `${this.scheduledAt.value!}T${this.scheduledTime.value!}:00`;
+    const scheduledDateTime = new Date(dateTimeString).toISOString();
+
     const payload: BookAppointmentRequest = {
       patient_id:   this.patientId.value!,
       doctor_id:    this.doctorId.value!,
       disease:      this.disease.value!,
       symptoms:     this.symptoms.value!,
-      scheduled_at: new Date(this.scheduledAt.value!).toISOString()
+      scheduled_at: scheduledDateTime
     };
 
     this.appointmentService.bookAppointment(payload).subscribe({
       next: (res) => {
+        console.log(res);
         this.toastService.success('Appointment Booked', 'Appointment booked successfully.');
         this.isSubmitting.set(false);
         
