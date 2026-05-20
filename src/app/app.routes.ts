@@ -1,17 +1,9 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
-/**
- * Application route definitions.
- *
- * - /login is protected by noAuthGuard (redirects logged-in users to dashboard)
- * - All other routes are protected by authGuard (redirects unauthenticated users to login)
- * - Components are lazy-loaded for optimal bundle splitting
- * - Default route redirects to /register-patient
- * - Wildcard 404 also redirects to /register-patient
- */
+
 export const routes: Routes = [
-  // Public route — login page (only accessible to unauthenticated users)
+
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {

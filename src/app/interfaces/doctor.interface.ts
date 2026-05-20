@@ -1,7 +1,4 @@
-/**
- * Doctor interface.
- * Represents a doctor record used in the appointment booking dropdown.
- */
+
 export interface Doctor {
   _id:            string;
   name:           string;

@@ -19,7 +19,7 @@ export class ToastService {
 
     this.toasts.update(list => [...list, { id, type, title, message }]);
 
-    // Auto remove after duration
+   
     setTimeout(() => this.remove(id), duration);
   }
 

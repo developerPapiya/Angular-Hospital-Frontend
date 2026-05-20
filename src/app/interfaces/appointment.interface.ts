@@ -1,14 +1,9 @@
 import { PaginationMeta } from './api.interface';
 
-/**
- * Appointment-related interfaces.
- * Covers booking, listing, and populated reference types.
- */
 
-/** Possible appointment statuses */
 export type AppointmentStatus = 'scheduled' | 'completed' | 'cancelled';
 
-/** Populated patient reference within an appointment record */
+
 export interface AppointmentPatient {
   _id:        string;
   patient_id: string;
@@ -18,7 +13,7 @@ export interface AppointmentPatient {
   age:        number;
 }
 
-/** Populated doctor reference within an appointment record */
+
 export interface AppointmentDoctor {
   _id:            string;
   name:           string;
@@ -26,19 +21,16 @@ export interface AppointmentDoctor {
   department:     string;
 }
 
-/** Populated staff reference who booked the appointment */
+
 export interface AppointmentBookedBy {
   _id:  string;
   name: string;
 }
 
-/**
- * Full appointment record as returned by the API.
- * All reference fields are populated objects.
- */
+
 export interface Appointment {
   _id:            string;
-  appointment_no: string;         // e.g. "APT-20260510-0003"
+  appointment_no: string;         
   token_no:       number;
   patient_id:     AppointmentPatient;
   doctor_id:      AppointmentDoctor;
@@ -51,16 +43,16 @@ export interface Appointment {
   updatedAt:      string;
 }
 
-/** Payload for POST /appointments — book a new appointment */
+
 export interface BookAppointmentRequest {
-  patient_id:   string;           // MongoDB _id of patient
-  doctor_id:    string;           // MongoDB _id of doctor
+  patient_id:   string;          
+  doctor_id:    string;           
   disease:      string;
   symptoms:     string;
-  scheduled_at: string;           // ISO 8601 date string
+  scheduled_at: string;          
 }
 
-/** Paginated response from GET /appointments */
+
 export interface AppointmentListResponse {
   appointments: Appointment[];
   pagination:   PaginationMeta;

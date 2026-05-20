@@ -80,8 +80,7 @@ isSuccess = signal<string>('');
             patientPid:  res.data.patient_id
           }
         });
-        // Navigate to Book Appointment with newly created patient details
-        // This allows the booking page to pre-fill the patient info
+
 
         if(res.success){
           this.isSuccess.set(`${res.message}`)

@@ -10,18 +10,7 @@ import { Doctor } from '../../interfaces/doctor.interface';
 import { BookAppointmentRequest } from '../../interfaces/appointment.interface';
 import { ToastService } from '../../core/services/toast.service';
 
-/**
- * Book Appointment Page Component
- * 
- * Responsibilities:
- * - Handle patient selection (via search or pre-filled from Register page)
- * - Load available doctors
- * - Implement booking form with validation (no past dates)
- * - Trigger PDF slip generation on success
- * 
- * Mode A: Arrive with query params -> Patient pre-filled
- * Mode B: Direct arrival -> Search patient manually
- */
+
 @Component({
   selector: 'app-book-appointment',
   standalone: true,
@@ -30,7 +19,7 @@ import { ToastService } from '../../core/services/toast.service';
 })
 export class BookAppointmentComponent implements OnInit {
 
-  /** Booking form group */
+
   bookingForm = new FormGroup({
     patient_id:   new FormControl('', [Validators.required]),
     doctor_id:    new FormControl('', [Validators.required]),
@@ -40,7 +29,7 @@ export class BookAppointmentComponent implements OnInit {
     scheduled_time: new FormControl('', [Validators.required])
   });
 
-  // ── Signals for state management ──
+
   selectedPatient   = signal<Patient | null>(null);
   searchResults     = signal<Patient[] | null>(null);
   availableDoctors  = signal<Doctor[] | null>(null);
@@ -49,10 +38,10 @@ export class BookAppointmentComponent implements OnInit {
   errorMsg          = signal<string>('');
   successMsg        = signal<string>('');
   
-  /** Minimum date for the date picker (today) */
+
   minDate = new Date().toISOString().split('T')[0];
 
-  /** Subject for debounced patient searching */
+ 
   private searchSubject = new Subject<string>();
 
   constructor(
@@ -63,7 +52,7 @@ export class BookAppointmentComponent implements OnInit {
     private appointmentService: AppointmentService,
     private toastService: ToastService
   ) {
-    // Setup debounced search effect
+   
     this.searchSubject.pipe(
       debounceTime(400),
       distinctUntilChanged()
@@ -75,7 +64,7 @@ export class BookAppointmentComponent implements OnInit {
     this.loadDoctors();
   }
 
-  // ── Form Control Getters ──
+ 
   get patientId()   { return this.bookingForm.get('patient_id')!; }
   get doctorId()    { return this.bookingForm.get('doctor_id')!; }
   get disease()     { return this.bookingForm.get('disease')!; }
@@ -83,9 +72,7 @@ export class BookAppointmentComponent implements OnInit {
   get scheduledAt() { return this.bookingForm.get('scheduled_at')!; }
   get scheduledTime() { return this.bookingForm.get('scheduled_time')!; }
 
-  /**
-   * Check for patient details in query parameters (from Register page redirect)
-   */
+  
   private checkQueryParams(): void {
     const pId = this.route.snapshot.queryParamMap.get('patientId');
     if (pId) {
@@ -96,9 +83,7 @@ export class BookAppointmentComponent implements OnInit {
     }
   }
 
-  /**
-   * Load available doctors for the dropdown
-   */
+
   private loadDoctors(): void {
     this.doctorService.getAvailableDoctors().subscribe({
       next: (res) => this.availableDoctors.set(res.data),
@@ -106,9 +91,7 @@ export class BookAppointmentComponent implements OnInit {
     });
   }
 
-  /**
-   * Handle search input typing
-   */
+
   onSearchInput(event: Event): void {
     const term = (event.target as HTMLInputElement).value;
     if (term.length >= 3) {
@@ -120,11 +103,9 @@ export class BookAppointmentComponent implements OnInit {
     }
   }
 
-  /**
-   * Execute API search for patients
-   */
+ 
   private performSearch(term: string): void {
-    // Try searching by phone if numeric, otherwise by name
+
     const isPhone = /^[0-9]+$/.test(term);
     const searchParams = isPhone ? { phone: term } : { name: term };
 
@@ -140,9 +121,7 @@ export class BookAppointmentComponent implements OnInit {
     });
   }
 
-  /**
-   * Select a patient from search results or pre-fill
-   */
+
   selectPatient(patient: Patient): void {
     this.selectedPatient.set(patient);
     this.patientId.setValue(patient._id);
@@ -150,18 +129,14 @@ export class BookAppointmentComponent implements OnInit {
     this.errorMsg.set('');
   }
 
-  /**
-   * Deselect patient and reset search
-   */
+
   clearSelection(): void {
     this.selectedPatient.set(null);
     this.patientId.setValue('');
     this.searchResults.set([]);
   }
 
-  /**
-   * Submit booking form
-   */
+
   onSubmit(): void {
     this.errorMsg.set('');
     this.successMsg.set('');
@@ -171,7 +146,7 @@ export class BookAppointmentComponent implements OnInit {
 
     this.isSubmitting.set(true);
 
-    // Combine date and time into ISO format
+ 
     const dateTimeString = `${this.scheduledAt.value!}T${this.scheduledTime.value!}:00`;
     const scheduledDateTime = new Date(dateTimeString).toISOString();
 
@@ -192,7 +167,7 @@ export class BookAppointmentComponent implements OnInit {
         // Open PDF slip
         this.appointmentService.openSlipInNewTab(res.data._id);
         
-        // Reset form but keep doctors loaded
+      
         this.bookingForm.reset();
         this.selectedPatient.set(null);
       },

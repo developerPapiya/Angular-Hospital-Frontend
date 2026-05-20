@@ -1,30 +1,20 @@
 import { Injectable, signal } from '@angular/core';
 
-/**
- * Theme Service
- * 
- * Responsibilities:
- * - Manage global Dark/Light mode state
- * - Persist theme preference to localStorage
- * - Apply 'dark' class to the root document element
- */
+
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  /** Reactive signal for the current theme state */
+ 
   isDarkMode = signal<boolean>(true);
 
   constructor() {
     this.initTheme();
   }
 
-  /**
-   * Initialize theme from localStorage or system preference.
-   * Default to 'dark' for this project's premium aesthetic.
-   */
+
   private initTheme(): void {
     const savedTheme = localStorage.getItem('theme');
     
-    // If no saved theme, default to dark
+    
     if (savedTheme === 'light') {
       this.setLightMode();
     } else {
@@ -32,9 +22,7 @@ export class ThemeService {
     }
   }
 
-  /**
-   * Toggle between dark and light mode
-   */
+  
   toggleTheme(): void {
     if (this.isDarkMode()) {
       this.setLightMode();
