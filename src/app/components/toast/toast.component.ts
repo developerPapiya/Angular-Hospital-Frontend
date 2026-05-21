@@ -1,15 +1,18 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ToastService, ToastMessage } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-toast',
   standalone: true,
+  imports: [CommonModule],
+  styleUrls: ['./toast.component.css'],
   template: `
     <div class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 w-80">
       @for (toast of toastService.toasts(); track toast.id) {
         <div
-          class="flex items-start gap-3 p-4 rounded-xl shadow-xl border backdrop-blur-md
-                 animate-in slide-in-from-right duration-300"
+          class="flex items-start gap-3 p-4 rounded-xl shadow-xl border backdrop-blur-md"
+          [ngClass]="getToastAnimationClass(toast)"
           [class]="getToastClass(toast)"
         >
           <div class="mt-0.5 shrink-0">
@@ -83,7 +86,7 @@ import { ToastService, ToastMessage } from '../../core/services/toast.service';
 
           <!-- Close button -->
           <button
-            (click)="toastService.remove(toast.id)"
+            (click)="removeToast(toast.id)"
             class="shrink-0 opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
           >
             <svg
@@ -103,9 +106,9 @@ import { ToastService, ToastMessage } from '../../core/services/toast.service';
 })
 export class ToastComponent {
   toastService = inject(ToastService);
+  removingToastIds = new Set<number>();
 
   getToastClass(toast: ToastMessage): string {
-    const base = '';
     const classes: Record<string, string> = {
       success:
         'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-800 dark:text-green-200',
@@ -115,5 +118,18 @@ export class ToastComponent {
       info: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-200',
     };
     return classes[toast.type] ?? '';
+  }
+
+  getToastAnimationClass(toast: ToastMessage): string {
+    const isRemoving = this.removingToastIds.has(toast.id);
+    return isRemoving ? 'toast-exit' : 'toast-enter';
+  }
+
+  removeToast(toastId: number): void {
+    this.removingToastIds.add(toastId);
+    setTimeout(() => {
+      this.toastService.remove(toastId);
+      this.removingToastIds.delete(toastId);
+    }, 300);
   }
 }
