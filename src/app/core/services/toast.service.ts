@@ -14,7 +14,7 @@ export class ToastService {
   toasts = signal<ToastMessage[]>([]);
   private counter = 0;
 
-  show(type: ToastType, title: string, message: string, duration = 3000): void {
+  show(type: ToastType, title: string, message: string, duration = 5000): void {
     const id = ++this.counter;
 
     this.toasts.update(list => [...list, { id, type, title, message }]);
