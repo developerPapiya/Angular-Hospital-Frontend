@@ -30,6 +30,12 @@ export const routes: Routes = [
     loadComponent: ()=>import('./pages/register-patient/register-patient.component')
     .then(m => m.RegisterPatientComponent),
     canActivate: [authGuard],
-    title: 'Book Appointment'
+    title: 'Register Patient — Hospital'
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
+    title: 'Page Not Found — Hospital',
   },
 ];
