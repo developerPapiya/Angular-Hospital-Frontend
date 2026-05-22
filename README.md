@@ -1,4 +1,4 @@
-#  Hospital Management Frontend
+#  Hospital APP Frontend
 
 A modern, high-performance, and visually stunning Hospital Management System frontend built using **Angular v20** and **Tailwind CSS v4**. The system features role-based access control, reactive state management using **Angular Signals**, real-time search, custom alerts, dynamic theme support, and automated OPD slip generation.
 
