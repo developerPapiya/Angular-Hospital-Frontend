@@ -78,7 +78,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed (v18+ recommended) a
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd hospital-frontend
+   cd angular-hospital-frontend
    ```
 
 2. **Install dependencies:**
